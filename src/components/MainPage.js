@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Button, Container, Table } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 const DataRow = ({ firstName, lastName, handleEdit, handleDelete }) => {
@@ -6,8 +7,8 @@ const DataRow = ({ firstName, lastName, handleEdit, handleDelete }) => {
         <tr >
             <td>{firstName}</td>
             <td>{lastName}</td>
-            <td> <button onClick={handleEdit}>edit</button> </td>
-            <td> <button onClick={handleDelete}>delete</button> </td>
+            <td className="text-center"><Button variant="primary" onClick={handleEdit}>Edit</Button></td>
+            <td className="text-center"><Button variant="danger" onClick={handleDelete}>Delete</Button></td>
         </tr>
     );
 }
@@ -22,7 +23,7 @@ const DataTable = ({ myData, handleEdit, handleDelete }) => {
     );
 
     return (
-        <table>
+        <Table striped bordered hover>
             <thead>
                 <tr>
                     <th>First Name</th>
@@ -34,7 +35,7 @@ const DataTable = ({ myData, handleEdit, handleDelete }) => {
             <tbody>
                 {listItems}
             </tbody>
-        </table>
+        </Table>
     )
 }
 
@@ -62,10 +63,10 @@ const MainPage = () => {
     }, [users]);
 
     return (
-        <div>
-            <button onClick={handleClick}>Add User</button>
+        <Container>
             <DataTable myData={users} handleEdit={handleEdit} handleDelete={handleDelete} />
-        </div>)
+            <Button variant="success" onClick={handleClick}>Add User</Button>
+        </Container>)
 }
 
 export default MainPage;

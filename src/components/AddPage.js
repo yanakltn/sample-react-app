@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button, Container, Form } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 
@@ -16,6 +17,10 @@ const AddPage = () => {
         navigate('/');
     }
 
+    const handleGoBack = (event) => {
+        navigate('/');
+    }
+
     const handleChangeFirst = (event) => {
         setFirstName(event.target.value);
     }
@@ -25,19 +30,27 @@ const AddPage = () => {
     }
 
     return (
-        <div>
-            <div>
-                <label>First Name:</label>
-                <input onChange={handleChangeFirst} type='text' value={firstName} />
-            </div>
+        <Container >
+            <Form>
+                <Form.Group className="mb-3">
+                    <Form.Label>First Name:</Form.Label>
+                    <Form.Control onChange={handleChangeFirst} type='text' value={firstName} />
+                </Form.Group>
 
-            <div>
-                <label>Last Name:</label>
-                <input onChange={handleChangeLast} type='text' value={lastName} />
-            </div>
+                <Form.Group className="mb-3">
+                    <Form.Label>Last Name:</Form.Label>
+                    <Form.Control onChange={handleChangeLast} type='text' value={lastName} />
+                </Form.Group>
 
-            <button onClick={handleOnSubmit}>Submit</button>
-        </div>
+                <Button variant="primary" type="submit" onClick={handleOnSubmit}>
+                    Submit
+                </Button>
+
+                <Button variant="info" onClick={handleGoBack}>
+                    Main Page
+                </Button>
+            </Form>
+        </Container>
     )
 }
 

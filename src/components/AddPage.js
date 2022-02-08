@@ -1,24 +1,15 @@
 import React, { useState } from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { Button, Form, Modal } from 'react-bootstrap';
 
 
-const AddPage = () => {
+
+const AddUserModal = ({ onSave, show, onClose }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const navigate = useNavigate();
 
-
-    const handleOnSubmit = (event) => {
-        event.preventDefault();
-        const myData = JSON.parse(localStorage.getItem('myData') || '[]');
-        myData.push({ firstName, lastName });
-        localStorage.setItem('myData', JSON.stringify(myData));
-        navigate('/');
-    }
-
-    const handleGoBack = (event) => {
-        navigate('/');
+    const handleSave = (event) => {
+        onSave({ firstName, lastName });
+        onClose();
     }
 
     const handleChangeFirst = (event) => {
@@ -30,28 +21,33 @@ const AddPage = () => {
     }
 
     return (
-        <Container >
-            <Form>
-                <Form.Group className="mb-3">
-                    <Form.Label>First Name:</Form.Label>
-                    <Form.Control onChange={handleChangeFirst} type='text' value={firstName} />
-                </Form.Group>
+        <Modal show={show} onHide={onClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Add User</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group className="mb-3">
+                        <Form.Label>First Name:</Form.Label>
+                        <Form.Control onChange={handleChangeFirst} type='text' value={firstName} />
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Last Name:</Form.Label>
-                    <Form.Control onChange={handleChangeLast} type='text' value={lastName} />
-                </Form.Group>
-
-                <Button variant="primary" type="submit" onClick={handleOnSubmit}>
-                    Submit
+                    <Form.Group className="mb-3">
+                        <Form.Label>Last Name:</Form.Label>
+                        <Form.Control onChange={handleChangeLast} type='text' value={lastName} />
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={onClose} variant="secondary">
+                    Close
                 </Button>
-
-                <Button variant="info" onClick={handleGoBack}>
-                    Main Page
+                <Button onClick={handleSave} variant="primary">
+                    Save Changes
                 </Button>
-            </Form>
-        </Container>
+            </Modal.Footer>
+        </Modal>
     )
 }
 
-export default AddPage;
+export default AddUserModal;

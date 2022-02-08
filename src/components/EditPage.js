@@ -1,31 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
-import { useNavigate, useParams } from "react-router-dom";
+import { Button, Form, Modal } from 'react-bootstrap';
 
 
-const EditPage = () => {
-    const { index } = useParams();
+const EditUserModal = ({ user, onSave, show, onClose }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
-        const myData = JSON.parse(localStorage.getItem('myData') || '[]');
-        const item = myData[index];
-        setFirstName(item.firstName);
-        setLastName(item.lastName);
-    }, []);
+        setFirstName(user.firstName);
+        setLastName(user.lastName);
+    }, [user]);
 
-    const handleOnSubmit = (event) => {
-        event.preventDefault();
-        const myData = JSON.parse(localStorage.getItem('myData') || '[]');
-        myData[index] = { firstName, lastName };
-        localStorage.setItem('myData', JSON.stringify(myData));
-        navigate('/');
-    }
-
-    const handleGoBack = (event) => {
-        navigate('/');
+    const handleSave = (event) => {
+        onSave({ firstName, lastName });
+        onClose();
     }
 
     const handleChangeFirst = (event) => {
@@ -37,28 +25,33 @@ const EditPage = () => {
     }
 
     return (
-        <Container >
-            <Form>
-                <Form.Group className="mb-3">
-                    <Form.Label>First Name:</Form.Label>
-                    <Form.Control onChange={handleChangeFirst} type='text' value={firstName} />
-                </Form.Group>
+        <Modal show={show} onHide={onClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Edit User</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group className="mb-3">
+                        <Form.Label>First Name:</Form.Label>
+                        <Form.Control onChange={handleChangeFirst} type='text' value={firstName} />
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Last Name:</Form.Label>
-                    <Form.Control onChange={handleChangeLast} type='text' value={lastName} />
-                </Form.Group>
-
-                <Button variant="primary" type="submit" onClick={handleOnSubmit}>
-                    Submit
+                    <Form.Group className="mb-3">
+                        <Form.Label>Last Name:</Form.Label>
+                        <Form.Control onChange={handleChangeLast} type='text' value={lastName} />
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={onClose} variant="secondary">
+                    Close
                 </Button>
-
-                <Button variant="info" onClick={handleGoBack}>
-                    Main Page
+                <Button onClick={handleSave} variant="primary">
+                    Save Changes
                 </Button>
-            </Form>
-        </Container>
+            </Modal.Footer>
+        </Modal>
     )
 }
 
-export default EditPage;
+export default EditUserModal;

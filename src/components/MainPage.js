@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import AddUserModal from './AddPage';
+import EditUserModal from './EditPage';
 
 const DataRow = ({ firstName, lastName, handleEdit, handleDelete }) => {
     return (
@@ -40,32 +41,50 @@ const DataTable = ({ myData, handleEdit, handleDelete }) => {
 }
 
 const MainPage = () => {
+    const [showEdit, setShowEdit] = useState(false);
+    const [showAdd, setShowAdd] = useState(false);
     const [users, setUsers] = useState(() => {
         const myData = JSON.parse(localStorage.getItem('myData') || '[]');
         return myData;
     });
-    const navigate = useNavigate();
 
-    const handleClick = () => {
-        navigate('/add');
-    }
-    const handleEdit = (index) => {
-        navigate('/edit/' + index);
-    }
+    const [selectedUserIndex, setSelectedUserIndex] = useState(0);
 
+    const handleOnSave = (user) => {
+        const newUsers = users.slice();
+        newUsers[selectedUserIndex] = user;
+        setUsers(newUsers);
+    }
     const handleDelete = (index) => {
         const newUsers = users.filter((item, curIndex) => curIndex !== index);
         setUsers(newUsers);
     }
 
+    const handleCloseEditModal = () => setShowEdit(false);
+
+    const handleCloseAddModal = () => setShowAdd(false);
+
+    const handleOpenEditModal = (index) => {
+        setSelectedUserIndex(index);
+        setShowEdit(true);
+    }
+    const handleOpenAddModal = () => setShowAdd(true);
+
+    const handleOnAdd = (user) => {
+        const newUsers = [...users, user];
+        setUsers(newUsers);
+    }
     useEffect(() => {
         localStorage.setItem('myData', JSON.stringify(users));
     }, [users]);
 
     return (
         <Container>
-            <DataTable myData={users} handleEdit={handleEdit} handleDelete={handleDelete} />
-            <Button variant="success" onClick={handleClick}>Add User</Button>
+            <DataTable myData={users} handleEdit={handleOpenEditModal} handleDelete={handleDelete} />
+            <Button variant="success" onClick={handleOpenAddModal}>Add User</Button>
+
+            <EditUserModal show={showEdit} onClose={handleCloseEditModal} user={users[selectedUserIndex]} onSave={handleOnSave} />
+            <AddUserModal show={showAdd} onClose={handleCloseAddModal} onSave={handleOnAdd} />
         </Container>)
 }
 

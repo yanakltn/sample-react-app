@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
 
@@ -7,6 +7,11 @@ const AddUserModal = ({ onSave, show, onClose }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
+
+    useEffect(() => {
+        setFirstName('');
+        setLastName('');
+    }, [show]);
     const handleSave = (event) => {
         onSave({ firstName, lastName });
         onClose();

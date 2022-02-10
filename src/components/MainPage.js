@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser, deleteUser, updateUser } from '../app/usersSlice';
 import AddUserModal from './AddPage';
 import EditUserModal from './EditPage';
 
@@ -43,21 +45,16 @@ const DataTable = ({ myData, handleEdit, handleDelete }) => {
 const MainPage = () => {
     const [showEdit, setShowEdit] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
-    const [users, setUsers] = useState(() => {
-        const myData = JSON.parse(localStorage.getItem('myData') || '[]');
-        return myData;
-    });
+    const users = useSelector((state) => state.users.users)
+    const dispatch = useDispatch()
 
     const [selectedUserIndex, setSelectedUserIndex] = useState(0);
 
     const handleOnSave = (user) => {
-        const newUsers = users.slice();
-        newUsers[selectedUserIndex] = user;
-        setUsers(newUsers);
+        dispatch(updateUser({ index: selectedUserIndex, newUser: user }));
     }
     const handleDelete = (index) => {
-        const newUsers = users.filter((item, curIndex) => curIndex !== index);
-        setUsers(newUsers);
+        dispatch(deleteUser(index));
     }
 
     const handleCloseEditModal = () => setShowEdit(false);
@@ -71,12 +68,8 @@ const MainPage = () => {
     const handleOpenAddModal = () => setShowAdd(true);
 
     const handleOnAdd = (user) => {
-        const newUsers = [...users, user];
-        setUsers(newUsers);
+        dispatch(addUser(user));
     }
-    useEffect(() => {
-        localStorage.setItem('myData', JSON.stringify(users));
-    }, [users]);
 
     return (
         <Container>

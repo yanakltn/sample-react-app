@@ -7,8 +7,10 @@ const EditUserModal = ({ user, onSave, show, onClose }) => {
     const [lastName, setLastName] = useState('');
 
     useEffect(() => {
-        setFirstName(user.firstName);
-        setLastName(user.lastName);
+        if (!!user) {
+            setFirstName(user.firstName);
+            setLastName(user.lastName);
+        }
     }, [user]);
 
     const handleSave = (event) => {

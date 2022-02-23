@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUser, deleteUser, updateUser } from '../app/usersSlice';
+import { createUser, updateUser, fetchUsers, deleteUserAsync } from '../app/usersSlice';
 import AddUserModal from './AddPage';
 import EditUserModal from './EditPage';
 
@@ -50,11 +50,15 @@ const MainPage = () => {
 
     const [selectedUserIndex, setSelectedUserIndex] = useState(0);
 
+    useEffect(() => {
+        dispatch(fetchUsers());
+    }, []);
+
     const handleOnSave = (user) => {
-        dispatch(updateUser({ index: selectedUserIndex, newUser: user }));
+        dispatch(updateUser({userId: users[selectedUserIndex]._id, user}));
     }
     const handleDelete = (index) => {
-        dispatch(deleteUser(index));
+        dispatch(deleteUserAsync(users[index]._id));
     }
 
     const handleCloseEditModal = () => setShowEdit(false);
@@ -68,7 +72,7 @@ const MainPage = () => {
     const handleOpenAddModal = () => setShowAdd(true);
 
     const handleOnAdd = (user) => {
-        dispatch(addUser(user));
+        dispatch(createUser(user));
     }
 
     return (
